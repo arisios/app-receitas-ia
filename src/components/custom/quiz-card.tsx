@@ -187,230 +187,270 @@ export function QuizCard({
   }
 
   return (
-    <Card className="w-full max-w-4xl mx-auto shadow-2xl border-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md">
-      <CardHeader className="space-y-4 pb-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-gradient-to-br from-orange-500 to-red-500 text-white">
-              {categoryIcons[category]}
-            </div>
-            <div>
-              <span className="text-xs font-semibold uppercase tracking-wider text-orange-500 block">
-                {category}
-              </span>
-              <span className="text-xs text-gray-500 dark:text-gray-400">
-                Etapa {step} de {totalSteps}
-              </span>
-            </div>
-          </div>
-        </div>
-        
-        <div className="space-y-3">
-          <div className="relative w-full bg-gray-100 dark:bg-gray-800 h-2 rounded-full overflow-hidden">
-            <div 
-              className="absolute h-full bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 transition-all duration-700 ease-out rounded-full"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-        </div>
-
-        <CardTitle className="text-2xl sm:text-3xl font-bold leading-tight text-gray-900 dark:text-white">
-          {question}
-        </CardTitle>
-        
-        <CardDescription className="text-base text-gray-600 dark:text-gray-400">
-          {type === 'multiple' && "Selecione todas as opções que se aplicam"}
-          {type === 'single' && "Escolha a opção que melhor descreve sua situação"}
-          {type === 'text' && "Digite sua resposta de forma clara"}
-          {type === 'textarea' && "Quanto mais detalhes você fornecer, melhor será seu cardápio"}
-          {type === 'combined' && "Preencha todos os campos para análise completa"}
-        </CardDescription>
-      </CardHeader>
-
-      <CardContent className="space-y-6">
-        {/* Análise em tempo real */}
-        {analysis && (
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 rounded-2xl p-5 border-2 border-blue-200 dark:border-blue-800 animate-in fade-in slide-in-from-top-4 duration-500">
-            <div className="flex items-start gap-3">
-              <div className="p-2 rounded-lg bg-blue-500 text-white flex-shrink-0">
-                <Brain className="w-5 h-5" />
-              </div>
-              <div className="flex-1 space-y-2">
-                <h4 className="font-semibold text-blue-900 dark:text-blue-100 flex items-center gap-2">
-                  <Sparkles className="w-4 h-4" />
-                  Análise da IA
-                </h4>
-                <p className="text-sm text-blue-800 dark:text-blue-200 leading-relaxed">
-                  {analysis}
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {type === 'single' && (
-          <RadioGroup value={value as string} onValueChange={onChange}>
-            <div className="grid grid-cols-1 gap-3">
-              {options.map((option) => (
-                <div 
-                  key={option} 
-                  className="relative group"
-                >
-                  <div className="flex items-center space-x-4 p-5 rounded-2xl border-2 border-gray-200 dark:border-gray-700 hover:border-orange-400 dark:hover:border-orange-600 hover:bg-gradient-to-r hover:from-orange-50/50 hover:to-red-50/50 dark:hover:from-orange-950/20 dark:hover:to-red-950/20 transition-all duration-300 cursor-pointer has-[:checked]:border-orange-500 has-[:checked]:bg-gradient-to-r has-[:checked]:from-orange-50 has-[:checked]:to-red-50 dark:has-[:checked]:from-orange-950/30 dark:has-[:checked]:to-red-950/30 has-[:checked]:shadow-lg">
-                    <RadioGroupItem 
-                      value={option} 
-                      id={option} 
-                      className="border-2 border-gray-300 dark:border-gray-600 data-[state=checked]:border-orange-500 data-[state=checked]:bg-orange-500"
-                    />
-                    <div className="flex items-center gap-4 flex-1">
-                      <div className="flex-shrink-0 p-2 rounded-xl bg-white dark:bg-gray-800 shadow-sm group-hover:shadow-md transition-shadow">
-                        {optionIcons[option] || <Circle className="w-5 h-5 text-gray-400" />}
-                      </div>
-                      <Label 
-                        htmlFor={option} 
-                        className="flex-1 cursor-pointer text-base font-medium text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors"
-                      >
-                        {option}
-                      </Label>
-                    </div>
+    <div className="w-full max-w-7xl mx-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        {/* Coluna do Quiz - 3/5 do espaço */}
+        <div className="lg:col-span-3">
+          <Card className="w-full shadow-2xl border-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md">
+            <CardHeader className="space-y-4 pb-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-xl bg-gradient-to-br from-orange-500 to-red-500 text-white">
+                    {categoryIcons[category]}
+                  </div>
+                  <div>
+                    <span className="text-xs font-semibold uppercase tracking-wider text-orange-500 block">
+                      {category}
+                    </span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                      Etapa {step} de {totalSteps}
+                    </span>
                   </div>
                 </div>
-              ))}
-            </div>
-          </RadioGroup>
-        )}
-
-        {type === 'multiple' && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {options.map((option) => (
-              <div 
-                key={option} 
-                className="relative group"
-              >
-                <div className="flex items-center space-x-4 p-4 rounded-2xl border-2 border-gray-200 dark:border-gray-700 hover:border-orange-400 dark:hover:border-orange-600 hover:bg-gradient-to-r hover:from-orange-50/50 hover:to-red-50/50 dark:hover:from-orange-950/20 dark:hover:to-red-950/20 transition-all duration-300 cursor-pointer has-[:checked]:border-orange-500 has-[:checked]:bg-gradient-to-r has-[:checked]:from-orange-50 has-[:checked]:to-red-50 dark:has-[:checked]:from-orange-950/30 dark:has-[:checked]:to-red-950/30 has-[:checked]:shadow-md">
-                  <Checkbox
-                    id={option}
-                    checked={Array.isArray(value) && value.includes(option)}
-                    onCheckedChange={(checked) => handleCheckboxChange(option, checked as boolean)}
-                    className="border-2 border-gray-300 dark:border-gray-600 data-[state=checked]:border-orange-500 data-[state=checked]:bg-orange-500"
+              </div>
+              
+              <div className="space-y-3">
+                <div className="relative w-full bg-gray-100 dark:bg-gray-800 h-2 rounded-full overflow-hidden">
+                  <div 
+                    className="absolute h-full bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 transition-all duration-700 ease-out rounded-full"
+                    style={{ width: `${progress}%` }}
                   />
-                  <div className="flex items-center gap-3 flex-1">
-                    <div className="flex-shrink-0 p-1.5 rounded-lg bg-white dark:bg-gray-800 shadow-sm">
-                      {optionIcons[option] || <Circle className="w-4 h-4 text-gray-400" />}
+                </div>
+              </div>
+
+              <CardTitle className="text-2xl sm:text-3xl font-bold leading-tight text-gray-900 dark:text-white">
+                {question}
+              </CardTitle>
+              
+              <CardDescription className="text-base text-gray-600 dark:text-gray-400">
+                {type === 'multiple' && "Selecione todas as opções que se aplicam"}
+                {type === 'single' && "Escolha a opção que melhor descreve sua situação"}
+                {type === 'text' && "Digite sua resposta de forma clara"}
+                {type === 'textarea' && "Quanto mais detalhes você fornecer, melhor será seu cardápio"}
+                {type === 'combined' && "Preencha todos os campos para análise completa"}
+              </CardDescription>
+            </CardHeader>
+
+            <CardContent className="space-y-6">
+              {type === 'single' && (
+                <RadioGroup value={value as string} onValueChange={onChange}>
+                  <div className="grid grid-cols-1 gap-3">
+                    {options.map((option) => (
+                      <div 
+                        key={option} 
+                        className="relative group"
+                      >
+                        <div className="flex items-center space-x-4 p-5 rounded-2xl border-2 border-gray-200 dark:border-gray-700 hover:border-orange-400 dark:hover:border-orange-600 hover:bg-gradient-to-r hover:from-orange-50/50 hover:to-red-50/50 dark:hover:from-orange-950/20 dark:hover:to-red-950/20 transition-all duration-300 cursor-pointer has-[:checked]:border-orange-500 has-[:checked]:bg-gradient-to-r has-[:checked]:from-orange-50 has-[:checked]:to-red-50 dark:has-[:checked]:from-orange-950/30 dark:has-[:checked]:to-red-950/30 has-[:checked]:shadow-lg">
+                          <RadioGroupItem 
+                            value={option} 
+                            id={option} 
+                            className="border-2 border-gray-300 dark:border-gray-600 data-[state=checked]:border-orange-500 data-[state=checked]:bg-orange-500"
+                          />
+                          <div className="flex items-center gap-4 flex-1">
+                            <div className="flex-shrink-0 p-2 rounded-xl bg-white dark:bg-gray-800 shadow-sm group-hover:shadow-md transition-shadow">
+                              {optionIcons[option] || <Circle className="w-5 h-5 text-gray-400" />}
+                            </div>
+                            <Label 
+                              htmlFor={option} 
+                              className="flex-1 cursor-pointer text-base font-medium text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors"
+                            >
+                              {option}
+                            </Label>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </RadioGroup>
+              )}
+
+              {type === 'multiple' && (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {options.map((option) => (
+                      <div 
+                        key={option} 
+                        className="relative group"
+                      >
+                        <div className="flex items-center space-x-4 p-4 rounded-2xl border-2 border-gray-200 dark:border-gray-700 hover:border-orange-400 dark:hover:border-orange-600 hover:bg-gradient-to-r hover:from-orange-50/50 hover:to-red-50/50 dark:hover:from-orange-950/20 dark:hover:to-red-950/20 transition-all duration-300 cursor-pointer has-[:checked]:border-orange-500 has-[:checked]:bg-gradient-to-r has-[:checked]:from-orange-50 has-[:checked]:to-red-50 dark:has-[:checked]:from-orange-950/30 dark:has-[:checked]:to-red-950/30 has-[:checked]:shadow-md">
+                          <Checkbox
+                            id={option}
+                            checked={Array.isArray(value) && value.includes(option)}
+                            onCheckedChange={(checked) => handleCheckboxChange(option, checked as boolean)}
+                            className="border-2 border-gray-300 dark:border-gray-600 data-[state=checked]:border-orange-500 data-[state=checked]:bg-orange-500"
+                          />
+                          <div className="flex items-center gap-3 flex-1">
+                            <div className="flex-shrink-0 p-1.5 rounded-lg bg-white dark:bg-gray-800 shadow-sm">
+                              {optionIcons[option] || <Circle className="w-4 h-4 text-gray-400" />}
+                            </div>
+                            <Label 
+                              htmlFor={option} 
+                              className="flex-1 cursor-pointer text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors"
+                            >
+                              {option}
+                            </Label>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {type === 'text' && (
+                <Input
+                  value={value as string}
+                  onChange={(e) => onChange(e.target.value)}
+                  placeholder={placeholder || "Digite aqui..."}
+                  className="text-base p-5 border-2 border-gray-300 dark:border-gray-600 focus:border-orange-500 dark:focus:border-orange-500 rounded-2xl shadow-sm focus:shadow-md transition-all"
+                />
+              )}
+
+              {type === 'textarea' && (
+                <Textarea
+                  value={value as string}
+                  onChange={(e) => onChange(e.target.value)}
+                  placeholder={placeholder || "Descreva aqui..."}
+                  rows={6}
+                  className="text-base p-5 border-2 border-gray-300 dark:border-gray-600 focus:border-orange-500 dark:focus:border-orange-500 rounded-2xl resize-none shadow-sm focus:shadow-md transition-all"
+                />
+              )}
+
+              {type === 'combined' && fields && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {fields.map((field) => (
+                    <div key={field.key} className="space-y-2">
+                      <Label htmlFor={field.key} className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        {field.label}
+                      </Label>
+                      <Input
+                        id={field.key}
+                        type={field.type}
+                        value={(value as Record<string, string>)[field.key] || ''}
+                        onChange={(e) => handleCombinedChange(field.key, e.target.value)}
+                        placeholder={field.placeholder}
+                        className="text-base p-4 border-2 border-gray-300 dark:border-gray-600 focus:border-orange-500 dark:focus:border-orange-500 rounded-xl shadow-sm focus:shadow-md transition-all"
+                      />
                     </div>
-                    <Label 
-                      htmlFor={option} 
-                      className="flex-1 cursor-pointer text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors"
-                    >
-                      {option}
+                  ))}
+                </div>
+              )}
+
+              {/* Campo de detalhes adicionais */}
+              {onAdditionalDetailsChange && (
+                <div className="space-y-3 pt-4 border-t-2 border-dashed border-gray-200 dark:border-gray-700">
+                  <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                    <Info className="w-4 h-4 text-orange-500" />
+                    <Label className="text-sm font-semibold">
+                      Detalhes adicionais (opcional)
                     </Label>
                   </div>
+                  <div className="relative">
+                    <Textarea
+                      value={additionalDetails}
+                      onChange={(e) => onAdditionalDetailsChange(e.target.value)}
+                      placeholder="Adicione informações extras que possam ajudar a personalizar ainda mais seu cardápio... Você também pode usar o microfone para falar!"
+                      rows={3}
+                      className="text-sm p-4 pr-12 border-2 border-gray-200 dark:border-gray-700 focus:border-orange-400 dark:focus:border-orange-600 rounded-xl resize-none bg-gray-50 dark:bg-gray-800/50 transition-all"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-2 bottom-2 h-8 w-8 rounded-lg hover:bg-orange-100 dark:hover:bg-orange-900/30 text-orange-500"
+                      title="Usar microfone (em breve)"
+                    >
+                      <Mic className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
+              )}
+
+              <div className="flex justify-between pt-6 gap-4">
+                <Button
+                  variant="outline"
+                  onClick={onPrevious}
+                  disabled={step === 1}
+                  className="gap-2 px-6 py-6 border-2 border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50 rounded-xl font-semibold transition-all"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                  Anterior
+                </Button>
+                
+                <Button
+                  onClick={onNext}
+                  disabled={isNextDisabled()}
+                  className="gap-2 px-8 py-6 bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 hover:from-orange-600 hover:via-red-600 hover:to-pink-600 text-white font-bold shadow-xl hover:shadow-2xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl text-base"
+                >
+                  {step === totalSteps ? (
+                    <>
+                      <Sparkles className="w-5 h-5" />
+                      Gerar Cardápio Personalizado
+                      <Sparkles className="w-5 h-5" />
+                    </>
+                  ) : (
+                    <>
+                      Próxima
+                      <ChevronRight className="w-5 h-5" />
+                    </>
+                  )}
+                </Button>
               </div>
-            ))}
-          </div>
-        )}
-
-        {type === 'text' && (
-          <Input
-            value={value as string}
-            onChange={(e) => onChange(e.target.value)}
-            placeholder={placeholder || "Digite aqui..."}
-            className="text-base p-5 border-2 border-gray-300 dark:border-gray-600 focus:border-orange-500 dark:focus:border-orange-500 rounded-2xl shadow-sm focus:shadow-md transition-all"
-          />
-        )}
-
-        {type === 'textarea' && (
-          <Textarea
-            value={value as string}
-            onChange={(e) => onChange(e.target.value)}
-            placeholder={placeholder || "Descreva aqui..."}
-            rows={6}
-            className="text-base p-5 border-2 border-gray-300 dark:border-gray-600 focus:border-orange-500 dark:focus:border-orange-500 rounded-2xl resize-none shadow-sm focus:shadow-md transition-all"
-          />
-        )}
-
-        {type === 'combined' && fields && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {fields.map((field) => (
-              <div key={field.key} className="space-y-2">
-                <Label htmlFor={field.key} className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                  {field.label}
-                </Label>
-                <Input
-                  id={field.key}
-                  type={field.type}
-                  value={(value as Record<string, string>)[field.key] || ''}
-                  onChange={(e) => handleCombinedChange(field.key, e.target.value)}
-                  placeholder={field.placeholder}
-                  className="text-base p-4 border-2 border-gray-300 dark:border-gray-600 focus:border-orange-500 dark:focus:border-orange-500 rounded-xl shadow-sm focus:shadow-md transition-all"
-                />
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Campo de detalhes adicionais */}
-        {onAdditionalDetailsChange && (
-          <div className="space-y-3 pt-4 border-t-2 border-dashed border-gray-200 dark:border-gray-700">
-            <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
-              <Info className="w-4 h-4 text-orange-500" />
-              <Label className="text-sm font-semibold">
-                Detalhes adicionais (opcional)
-              </Label>
-            </div>
-            <div className="relative">
-              <Textarea
-                value={additionalDetails}
-                onChange={(e) => onAdditionalDetailsChange(e.target.value)}
-                placeholder="Adicione informações extras que possam ajudar a personalizar ainda mais seu cardápio... Você também pode usar o microfone para falar!"
-                rows={3}
-                className="text-sm p-4 pr-12 border-2 border-gray-200 dark:border-gray-700 focus:border-orange-400 dark:focus:border-orange-600 rounded-xl resize-none bg-gray-50 dark:bg-gray-800/50 transition-all"
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="absolute right-2 bottom-2 h-8 w-8 rounded-lg hover:bg-orange-100 dark:hover:bg-orange-900/30 text-orange-500"
-                title="Usar microfone (em breve)"
-              >
-                <Mic className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
-        )}
-
-        <div className="flex justify-between pt-6 gap-4">
-          <Button
-            variant="outline"
-            onClick={onPrevious}
-            disabled={step === 1}
-            className="gap-2 px-6 py-6 border-2 border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50 rounded-xl font-semibold transition-all"
-          >
-            <ChevronLeft className="w-5 h-5" />
-            Anterior
-          </Button>
-          
-          <Button
-            onClick={onNext}
-            disabled={isNextDisabled()}
-            className="gap-2 px-8 py-6 bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 hover:from-orange-600 hover:via-red-600 hover:to-pink-600 text-white font-bold shadow-xl hover:shadow-2xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl text-base"
-          >
-            {step === totalSteps ? (
-              <>
-                <Sparkles className="w-5 h-5" />
-                Gerar Cardápio Personalizado
-                <Sparkles className="w-5 h-5" />
-              </>
-            ) : (
-              <>
-                Próxima
-                <ChevronRight className="w-5 h-5" />
-              </>
-            )}
-          </Button>
+            </CardContent>
+          </Card>
         </div>
-      </CardContent>
-    </Card>
+
+        {/* Coluna da Análise - 2/5 do espaço */}
+        <div className="lg:col-span-2">
+          <div className="sticky top-6">
+            {analysis ? (
+              <Card className="shadow-2xl border-0 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-950/50 dark:to-indigo-950/50 backdrop-blur-md animate-in fade-in slide-in-from-right-4 duration-500">
+                <CardHeader className="pb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg">
+                      <Brain className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-xl font-bold text-blue-900 dark:text-blue-100 flex items-center gap-2">
+                        <Sparkles className="w-5 h-5 text-yellow-500" />
+                        Análise da IA
+                      </CardTitle>
+                      <CardDescription className="text-blue-700 dark:text-blue-300 text-xs">
+                        Insights personalizados em tempo real
+                      </CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="prose prose-sm dark:prose-invert max-w-none">
+                    <p className="text-sm text-blue-900 dark:text-blue-100 leading-relaxed whitespace-pre-line">
+                      {analysis}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            ) : (
+              <Card className="shadow-xl border-2 border-dashed border-gray-300 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-900/50">
+                <CardContent className="pt-12 pb-12 text-center">
+                  <div className="flex flex-col items-center gap-4">
+                    <div className="p-4 rounded-full bg-gray-200 dark:bg-gray-800">
+                      <Brain className="w-8 h-8 text-gray-400 dark:text-gray-600" />
+                    </div>
+                    <div className="space-y-2">
+                      <h3 className="font-semibold text-gray-700 dark:text-gray-300">
+                        Aguardando suas respostas
+                      </h3>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs">
+                        A análise da IA aparecerá aqui conforme você responde as perguntas
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }

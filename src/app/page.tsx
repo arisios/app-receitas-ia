@@ -87,27 +87,38 @@ const quizQuestions = [
   },
   {
     question: "Você possui alguma condição de saúde que requer atenção nutricional?",
-    type: "textarea" as const,
-    placeholder: "Descreva condições como: diabetes, hipertensão, colesterol alto, problemas tireoidianos, SOP, resistência insulínica, doenças autoimunes, problemas digestivos (gastrite, refluxo, SII), alergias, intolerâncias, etc. Quanto mais detalhes, melhor!",
+    type: "multiple" as const,
+    options: [
+      "Nenhuma condição",
+      "Diabetes",
+      "Hipertensão",
+      "Colesterol alto",
+      "Problemas tireoidianos",
+      "SOP (Síndrome dos Ovários Policísticos)",
+      "Resistência insulínica",
+      "Doenças autoimunes",
+      "Problemas digestivos (gastrite, refluxo, SII)",
+      "Outras condições"
+    ],
     key: "health_conditions",
     category: "Saúde",
-    analysisTemplate: (answer: string) => {
-      if (!answer || answer.trim() === "") {
+    analysisTemplate: (answer: string[]) => {
+      if (!answer || answer.length === 0 || answer.includes("Nenhuma condição")) {
         return "Nenhuma condição de saúde reportada. Vamos focar em prevenção e otimização da saúde geral."
       }
-      const conditions = answer.toLowerCase()
+      
       let analysis = "Condições identificadas! "
       
-      if (conditions.includes('diabet')) {
+      if (answer.includes('Diabetes')) {
         analysis += "Para diabetes: baixo índice glicêmico, fibras, controle de carboidratos. "
       }
-      if (conditions.includes('hiper')) {
+      if (answer.includes('Hipertensão')) {
         analysis += "Para hipertensão: redução de sódio, aumento de potássio, DASH diet. "
       }
-      if (conditions.includes('colesterol')) {
+      if (answer.includes('Colesterol alto')) {
         analysis += "Para colesterol: ômega-3, fibras solúveis, redução de gorduras saturadas. "
       }
-      if (conditions.includes('tireoi')) {
+      if (answer.includes('Problemas tireoidianos')) {
         analysis += "Para tireoide: selênio, iodo, zinco em quantidades adequadas. "
       }
       
@@ -379,22 +390,22 @@ export default function Home() {
         bmi: bmiData?.bmi,
         bmi_category: bmiData?.category,
         activity_level: answers.activity_level as string || "Moderadamente ativo",
-        health_conditions: typeof answers.health_conditions === 'string' 
-          ? [answers.health_conditions] 
-          : (answers.health_conditions as string[]) || [],
+        health_conditions: Array.isArray(answers.health_conditions)
+          ? answers.health_conditions
+          : (answers.health_conditions ? [answers.health_conditions as string] : []),
         dietary_restrictions: (answers.dietary_restrictions as string[]) || [],
         cuisine_preferences: [],
         spice_level: "Moderado",
         budget: answers.budget as string || "Moderado",
         cooking_time: answers.cooking_time as string || "15-30 minutos",
         meal_type: (answers.meal_times as string[])?.join(", ") || "Almoço",
-        allergies: typeof answers.allergies === 'string'
-          ? [answers.allergies]
-          : (answers.allergies as string[]) || [],
+        allergies: Array.isArray(answers.allergies)
+          ? answers.allergies
+          : (answers.allergies ? [answers.allergies as string] : []),
         favorite_ingredients: (answers.favorite_ingredients as string[]) || [],
-        disliked_ingredients: typeof answers.disliked_ingredients === 'string'
-          ? [answers.disliked_ingredients]
-          : (answers.disliked_ingredients as string[]) || [],
+        disliked_ingredients: Array.isArray(answers.disliked_ingredients)
+          ? answers.disliked_ingredients
+          : (answers.disliked_ingredients ? [answers.disliked_ingredients as string] : []),
         serving_size: 1,
         motivation: "",
         cooking_skill: answers.cooking_skill as string || "Intermediário",
@@ -551,7 +562,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-orange-50 via-red-50 to-pink-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
-      <div className="w-full max-w-5xl space-y-8">
+      <div className="w-full max-w-7xl space-y-8">
         <div className="text-center space-y-6">
           <div className="flex items-center justify-center">
             <div className="relative">
@@ -567,10 +578,10 @@ export default function Home() {
             </div>
           </div>
           <div className="space-y-3">
-            <h1 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 bg-clip-text text-transparent">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 bg-clip-text text-transparent">
               ReceitAI
             </h1>
-            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed px-4">
               Cardápios personalizados baseados em ciência nutricional, criados especialmente para você
             </p>
           </div>
